@@ -74,7 +74,6 @@ export default function CookPage() {
             <div className="pt-2">
               <RepeatSelector value={repeatConfig} onChange={setRepeatConfig} disabled={state === 'running'} />
             </div>
-            <CustomPresets state={state} currentMinutes={inputMinutes} currentSeconds={inputSeconds} onApplyPreset={applyDuration} />
             <TimerControls
               state={state}
               inputMinutes={inputMinutes}
@@ -90,8 +89,9 @@ export default function CookPage() {
             />
           </div>
           {/* Presets */}
-          <div className="flex-shrink-0 md:w-[240px] w-full">
+          <div className="flex flex-col gap-8 flex-shrink-0 md:w-[240px] w-full">
             <QuickPresets timerState={state} onApplyPreset={applyDuration} />
+            <CustomPresets state={state} currentMinutes={inputMinutes} currentSeconds={inputSeconds} onApplyPreset={applyDuration} />
           </div>
         </div>
 
