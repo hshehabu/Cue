@@ -74,3 +74,32 @@ export const LAUNDRY_PRESETS: TimerPresetGroup[] = [
     ]
   }
 ];
+
+/**
+ * Quick presets for the Workout timer.
+ */
+export const WORKOUT_PRESETS: TimerPresetGroup[] = [
+  {
+    id: 'stretch', icon: '🧘', name: 'Stretch',
+    options: [
+      { label: 'Warm up', minutes: 5, seconds: 0 },
+      { label: 'Cool down', minutes: 10, seconds: 0 },
+    ],
+  },
+  {
+    id: 'cardio', icon: '🏃', name: 'Cardio',
+    options: [
+      { label: 'HIIT', minutes: 15, seconds: 0 },
+      { label: 'Run', minutes: 30, seconds: 0 },
+      { label: 'Long Run', minutes: 60, seconds: 0 },
+    ]
+  },
+  {
+    id: 'strength', icon: '💪', name: 'Strength',
+    options: [
+      { label: 'Core', minutes: 10, seconds: 0 },
+      { label: 'Quick', minutes: 20, seconds: 0 },
+      { label: 'Full Body', minutes: 45, seconds: 0 },
+    ]
+  }
+];

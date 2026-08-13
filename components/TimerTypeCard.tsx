@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { ChefHat, WashingMachine } from 'lucide-react';
+import { ChefHat, WashingMachine, Dumbbell } from 'lucide-react';
 import type { TimerType } from '@/types';
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number }>> = {
   ChefHat,
   WashingMachine,
+  Dumbbell,
 };
 
 export function TimerTypeCard({ timerType }: { timerType: TimerType }) {

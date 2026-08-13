@@ -1,8 +1,8 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import { useCallback, useEffect } from 'react';
-import { useParams, notFound } from 'next/navigation';
+import { useCallback, useEffect, use } from 'react';
+import { notFound } from 'next/navigation';
 import { useTimer } from '@/hooks/useTimer';
 import { useAlarm } from '@/hooks/useAlarm';
 import { Timer } from '@/components/Timer';
@@ -13,9 +13,9 @@ import { CustomPresets } from '@/components/CustomPresets';
 import { QuickPresets } from '@/components/QuickPresets';
 import { TIMER_TYPES } from '@/data/timerTypes';
 
-export default function UniversalTimerPage() {
-  const params = useParams();
-  const typeParam = params.type as string;
+export default function UniversalTimerPage({ params }: { params: Promise<{ type: string }> }) {
+  const resolvedParams = use(params);
+  const typeParam = resolvedParams.type;
   
   const timerConfig = TIMER_TYPES.find(t => t.route === `/${typeParam}`);
   

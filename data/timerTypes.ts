@@ -1,5 +1,5 @@
 import type { TimerType } from '@/types';
-import { COOKING_PRESETS, LAUNDRY_PRESETS } from './presets';
+import { COOKING_PRESETS, LAUNDRY_PRESETS, WORKOUT_PRESETS } from './presets';
 
 /**
  * Registry of all timer types.
@@ -25,5 +25,15 @@ export const TIMER_TYPES: TimerType[] = [
     defaultMinutes: 30,
     presetsTitle: 'Laundry Presets',
     presets: LAUNDRY_PRESETS,
+  },
+  {
+    id: 'workout',
+    name: 'Workout',
+    description: 'Intervals and rest timers.',
+    icon: 'Dumbbell',
+    route: '/workout',
+    defaultMinutes: 15,
+    presetsTitle: 'Workout Presets',
+    presets: WORKOUT_PRESETS,
   }
 ];
