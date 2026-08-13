@@ -30,17 +30,17 @@ export interface UseTimerReturn {
   advanceCycle: () => void;
 }
 
-export function useTimer(onFinished?: () => void): UseTimerReturn {
+export function useTimer(defaultMinutes: number = 15, onFinished?: () => void): UseTimerReturn {
   const [state, setState]               = useState<TimerState>('idle');
-  const [remaining, setRemaining]       = useState(15 * 60);
-  const [totalSeconds, setTotalSeconds] = useState(15 * 60);
-  const [inputMinutes, setInputMinutes] = useState(15);
+  const [remaining, setRemaining]       = useState(defaultMinutes * 60);
+  const [totalSeconds, setTotalSeconds] = useState(defaultMinutes * 60);
+  const [inputMinutes, setInputMinutes] = useState(defaultMinutes);
   const [inputSeconds, setInputSeconds] = useState(0);
   const [repeatConfig, setRepeatConfig] = useState<RepeatOption>('off');
   const [currentCycle, setCurrentCycle] = useState(1);
 
   const startTsRef    = useRef<number>(0);
-  const remainRefAtResume = useRef<number>(15 * 60);
+  const remainRefAtResume = useRef<number>(defaultMinutes * 60);
   const intervalRef   = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef      = useRef<TimerState>('idle');
   const onFinishedRef = useRef(onFinished);

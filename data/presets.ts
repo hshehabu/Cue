@@ -1,10 +1,9 @@
-import type { FoodPreset } from '@/types';
+import type { TimerPresetGroup } from '@/types';
 
 /**
- * Quick food presets for the Cooking timer.
- * Edit only this file to add/modify foods or options.
+ * Quick presets for the Cooking timer.
  */
-export const FOOD_PRESETS: FoodPreset[] = [
+export const COOKING_PRESETS: TimerPresetGroup[] = [
   {
     id: 'egg', icon: '🍳', name: 'Egg',
     options: [
@@ -53,4 +52,25 @@ export const FOOD_PRESETS: FoodPreset[] = [
       { label: 'Soft',   minutes: 10, seconds: 0 },
     ],
   },
+];
+
+/**
+ * Quick presets for the Laundry timer.
+ */
+export const LAUNDRY_PRESETS: TimerPresetGroup[] = [
+  {
+    id: 'washing', icon: '🧺', name: 'Washing',
+    options: [
+      { label: 'Quick Wash', minutes: 15, seconds: 0 },
+      { label: 'Machine', minutes: 30, seconds: 0 },
+      { label: 'Normal Wash', minutes: 45, seconds: 0 },
+      { label: 'Heavy Wash', minutes: 60, seconds: 0 },
+    ],
+  },
+  {
+    id: 'dryer', icon: '🌬️', name: 'Dryer',
+    options: [
+      { label: 'Standard', minutes: 45, seconds: 0 },
+    ]
+  }
 ];

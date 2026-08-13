@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react';
 import { useCallback, useEffect } from 'react';
+import { useParams, notFound } from 'next/navigation';
 import { useTimer } from '@/hooks/useTimer';
 import { useAlarm } from '@/hooks/useAlarm';
 import { Timer } from '@/components/Timer';
@@ -10,13 +11,19 @@ import { QuickDurations } from '@/components/QuickDurations';
 import { RepeatSelector } from '@/components/RepeatSelector';
 import { CustomPresets } from '@/components/CustomPresets';
 import { QuickPresets } from '@/components/QuickPresets';
+import { TIMER_TYPES } from '@/data/timerTypes';
 
-export default function CookPage() {
+export default function UniversalTimerPage() {
+  const params = useParams();
+  const typeParam = params.type as string;
+  
+  const timerConfig = TIMER_TYPES.find(t => t.route === `/${typeParam}`);
+  
   const { startAlarm, stopAlarm, unlock } = useAlarm();
-
   const onFinished = useCallback(() => { startAlarm(); }, [startAlarm]);
 
-  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset, repeatConfig, setRepeatConfig, currentCycle, advanceCycle } = useTimer(onFinished);
+  const defaultMinutes = timerConfig?.defaultMinutes || 15;
+  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset, repeatConfig, setRepeatConfig, currentCycle, advanceCycle } = useTimer(defaultMinutes, onFinished);
 
   const handleStart    = () => { unlock(); start(); };
   const handleReset    = () => { stopAlarm(); reset(); };
@@ -49,6 +56,10 @@ export default function CookPage() {
     };
   }, [state, repeatConfig, currentCycle, stopAlarm, advanceCycle, start]);
 
+  if (!timerConfig) {
+    return notFound();
+  }
+
   return (
     <main className="flex-1 flex flex-col px-6 md:px-8 py-8 md:py-12">
       <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
@@ -62,7 +73,7 @@ export default function CookPage() {
         </nav>
 
         <p className="text-[14px] text-[#C3C3C2] font-light">
-          Set a timer and we&apos;ll let you know when it&apos;s ready.
+          {timerConfig.description}
         </p>
 
         {/* Two-column layout */}
@@ -90,7 +101,7 @@ export default function CookPage() {
           </div>
           {/* Presets */}
           <div className="flex flex-col gap-8 flex-shrink-0 md:w-[240px] w-full">
-            <QuickPresets timerState={state} onApplyPreset={applyDuration} />
+            <QuickPresets title={timerConfig.presetsTitle} groups={timerConfig.presets} timerState={state} onApplyPreset={applyDuration} />
             <CustomPresets state={state} currentMinutes={inputMinutes} currentSeconds={inputSeconds} onApplyPreset={applyDuration} />
           </div>
         </div>

@@ -1,21 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { FOOD_PRESETS } from '@/data/presets';
-import type { TimerState, FoodPreset, PresetOption } from '@/types';
+import type { TimerState, TimerPresetGroup, PresetOption } from '@/types';
 
 function fmtTime(m: number, s: number) { return s === 0 ? `${m} min` : `${m}m ${s}s`; }
 
-export function QuickPresets({ timerState, onApplyPreset }: {
+export function QuickPresets({ title, groups, timerState, onApplyPreset }: {
+  title: string;
+  groups: TimerPresetGroup[];
   timerState: TimerState;
   onApplyPreset: (minutes: number, seconds: number) => void;
 }) {
-  const [activeFoodId, setActiveFoodId] = useState<string | null>(null);
+  const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const locked = timerState !== 'idle';
 
-  const handleFood = (id: string) => {
+  const handleGroup = (id: string) => {
     if (locked) return;
-    setActiveFoodId((prev) => prev === id ? null : id);
+    setActiveGroupId((prev) => prev === id ? null : id);
   };
 
   const handleOption = (opt: PresetOption) => {
@@ -23,14 +24,14 @@ export function QuickPresets({ timerState, onApplyPreset }: {
     onApplyPreset(opt.minutes, opt.seconds);
   };
 
-  const activeFood: FoodPreset | undefined = FOOD_PRESETS.find((f) => f.id === activeFoodId);
+  const activeGroup: TimerPresetGroup | undefined = groups.find((g) => g.id === activeGroupId);
 
   return (
     <aside className={`flex flex-col gap-4 ${locked ? 'pointer-events-none' : ''}`} aria-label="Quick food presets">
 
       {/* Header */}
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] font-medium text-[#C3C3C2] uppercase tracking-[0.1em]">Quick Presets</span>
+        <span className="text-[11px] font-medium text-[#C3C3C2] uppercase tracking-[0.1em]">{title}</span>
         <span
           className="text-[#C3C3C2] hover:text-[#363635] transition-colors cursor-default"
           title="Times are approximate and may vary depending on size, equipment, and preference."
@@ -45,36 +46,36 @@ export function QuickPresets({ timerState, onApplyPreset }: {
         </span>
       </div>
 
-      {/* Food grid */}
-      <div className={`grid grid-cols-3 gap-2 transition-opacity duration-150 ${locked ? 'opacity-40' : ''}`} role="list">
-        {FOOD_PRESETS.map((food) => {
-          const active = activeFoodId === food.id;
+      {/* Group grid */}
+      <div className={`grid grid-cols-2 sm:grid-cols-3 gap-2 transition-opacity duration-150 ${locked ? 'opacity-40' : ''}`} role="list">
+        {groups.map((group) => {
+          const active = activeGroupId === group.id;
           return (
             <button
-              key={food.id}
+              key={group.id}
               role="listitem"
               aria-pressed={active}
-              aria-label={`${food.name} presets`}
-              onClick={() => handleFood(food.id)}
+              aria-label={`${group.name} presets`}
+              onClick={() => handleGroup(group.id)}
               className={`flex flex-col items-center gap-1 py-2.5 px-1.5 border rounded-[5px] text-center transition-colors duration-100
                 ${active ? 'bg-black border-black' : 'bg-white border-[#C3C3C2] hover:bg-[#F5F5F5] hover:border-[#363635]'}`}
             >
-              <span className="text-[22px] leading-none select-none" aria-hidden="true">{food.icon}</span>
-              <span className={`text-[11px] leading-tight ${active ? 'text-white' : 'text-[#363635]'}`}>{food.name}</span>
+              <span className="text-[22px] leading-none select-none" aria-hidden="true">{group.icon}</span>
+              <span className={`text-[11px] leading-tight ${active ? 'text-white' : 'text-[#363635]'}`}>{group.name}</span>
             </button>
           );
         })}
       </div>
 
       {/* Options */}
-      {activeFood && (
+      {activeGroup && (
         <div className="flex flex-col gap-1.5" aria-live="polite">
-          <p className="text-[11px] font-medium text-[#C3C3C2] uppercase tracking-[0.08em]">{activeFood.name}</p>
-          {activeFood.options.map((opt) => (
+          <p className="text-[11px] font-medium text-[#C3C3C2] uppercase tracking-[0.08em]">{activeGroup.name}</p>
+          {activeGroup.options.map((opt) => (
             <button
               key={opt.label}
               onClick={() => handleOption(opt)}
-              aria-label={`${activeFood.name} — ${opt.label}, ${fmtTime(opt.minutes, opt.seconds)}`}
+              aria-label={`${activeGroup.name} — ${opt.label}, ${fmtTime(opt.minutes, opt.seconds)}`}
               className="flex items-center justify-between w-full px-3 py-2 border border-[#C3C3C2] rounded-[4px] bg-white text-[13px] text-[#363635] hover:bg-[#F5F5F5] hover:border-[#363635] hover:text-black active:bg-[#EBEBEB] transition-colors duration-100 text-left"
             >
               <span className="font-normal">{opt.label}</span>

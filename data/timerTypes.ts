@@ -1,4 +1,5 @@
 import type { TimerType } from '@/types';
+import { COOKING_PRESETS, LAUNDRY_PRESETS } from './presets';
 
 /**
  * Registry of all timer types.
@@ -11,9 +12,18 @@ export const TIMER_TYPES: TimerType[] = [
     description: 'Set a timer for your food.',
     icon: 'ChefHat',
     route: '/cook',
+    defaultMinutes: 15,
+    presetsTitle: 'Quick Presets',
+    presets: COOKING_PRESETS,
   },
-  // Future types (not yet implemented):
-  // { id: 'study',      name: 'Study',      description: 'Focus sessions and breaks.',  icon: 'BookOpen',  route: '/study'      },
-  // { id: 'workout',    name: 'Workout',    description: 'Intervals and rest timers.',  icon: 'Dumbbell',  route: '/workout'    },
-  // { id: 'meditation', name: 'Meditation', description: 'Quiet your mind.',            icon: 'Wind',      route: '/meditation' },
+  {
+    id: 'laundry',
+    name: 'Laundry',
+    description: 'Set a reminder for your laundry.',
+    icon: 'WashingMachine',
+    route: '/laundry',
+    defaultMinutes: 30,
+    presetsTitle: 'Laundry Presets',
+    presets: LAUNDRY_PRESETS,
+  }
 ];
