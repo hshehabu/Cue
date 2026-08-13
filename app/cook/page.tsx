@@ -1,12 +1,13 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTimer } from '@/hooks/useTimer';
 import { useAlarm } from '@/hooks/useAlarm';
 import { Timer } from '@/components/Timer';
 import { TimerControls } from '@/components/TimerControls';
 import { QuickDurations } from '@/components/QuickDurations';
+import { RepeatSelector } from '@/components/RepeatSelector';
 import { CustomPresets } from '@/components/CustomPresets';
 import { QuickPresets } from '@/components/QuickPresets';
 
@@ -15,12 +16,38 @@ export default function CookPage() {
 
   const onFinished = useCallback(() => { startAlarm(); }, [startAlarm]);
 
-  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset } = useTimer(onFinished);
+  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset, repeatConfig, setRepeatConfig, currentCycle, advanceCycle } = useTimer(onFinished);
 
   const handleStart    = () => { unlock(); start(); };
   const handleReset    = () => { stopAlarm(); reset(); };
   const handleNewTimer = () => { stopAlarm(); reset(); };
-  const handleStop     = () => { stopAlarm(); };
+  
+  const handleStop = () => { 
+    stopAlarm();
+    if (state === 'finished') {
+      if (repeatConfig === 'infinite' || (typeof repeatConfig === 'number' && currentCycle < repeatConfig)) {
+        advanceCycle();
+        start();
+      }
+    }
+  };
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (state === 'finished') {
+      const isNotLastCycle = repeatConfig === 'infinite' || (typeof repeatConfig === 'number' && currentCycle < repeatConfig);
+      if (isNotLastCycle) {
+        timeoutId = setTimeout(() => {
+          stopAlarm();
+          advanceCycle();
+          start();
+        }, 10000);
+      }
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [state, repeatConfig, currentCycle, stopAlarm, advanceCycle, start]);
 
   return (
     <main className="flex-1 flex flex-col px-6 md:px-8 py-8 md:py-12">
@@ -42,8 +69,11 @@ export default function CookPage() {
         <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-16">
           {/* Timer */}
           <div className="flex flex-col gap-8 flex-1 min-w-0">
-            <Timer remaining={remaining} state={state} />
+            <Timer remaining={remaining} state={state} repeatConfig={repeatConfig} currentCycle={currentCycle} />
             <QuickDurations state={state} onSetDuration={applyDuration} onAddTime={addTime} />
+            <div className="pt-2">
+              <RepeatSelector value={repeatConfig} onChange={setRepeatConfig} disabled={state === 'running'} />
+            </div>
             <CustomPresets state={state} currentMinutes={inputMinutes} currentSeconds={inputSeconds} onApplyPreset={applyDuration} />
             <TimerControls
               state={state}

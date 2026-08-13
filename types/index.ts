@@ -29,6 +29,8 @@ export interface AlarmSound {
 
 export type TimerState = 'idle' | 'running' | 'paused' | 'finished';
 
+export type RepeatOption = 'off' | 2 | 3 | 5 | 'infinite';
+
 export interface CustomPreset {
   id: string;
   name: string;

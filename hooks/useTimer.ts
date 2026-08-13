@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
-import type { TimerState } from '@/types';
+import type { TimerState, RepeatOption } from '@/types';
 
 export function formatTime(totalSecs: number): string {
   const s = Math.floor(totalSecs);
@@ -24,6 +24,10 @@ export interface UseTimerReturn {
   pause: () => void;
   resume: () => void;
   reset: () => void;
+  repeatConfig: RepeatOption;
+  setRepeatConfig: (v: RepeatOption) => void;
+  currentCycle: number;
+  advanceCycle: () => void;
 }
 
 export function useTimer(onFinished?: () => void): UseTimerReturn {
@@ -32,6 +36,8 @@ export function useTimer(onFinished?: () => void): UseTimerReturn {
   const [totalSeconds, setTotalSeconds] = useState(15 * 60);
   const [inputMinutes, setInputMinutes] = useState(15);
   const [inputSeconds, setInputSeconds] = useState(0);
+  const [repeatConfig, setRepeatConfig] = useState<RepeatOption>('off');
+  const [currentCycle, setCurrentCycle] = useState(1);
 
   const startTsRef    = useRef<number>(0);
   const remainRefAtResume = useRef<number>(15 * 60);
@@ -96,8 +102,13 @@ export function useTimer(onFinished?: () => void): UseTimerReturn {
     const total = inputMinutes * 60 + inputSeconds;
     setTotalSeconds(total);
     setRemaining(total);
+    setCurrentCycle(1);
     setState('idle');
   }, [stopInterval, inputMinutes, inputSeconds]);
+
+  const advanceCycle = useCallback(() => {
+    setCurrentCycle(c => c + 1);
+  }, []);
 
   const applyDuration = useCallback((minutes: number, seconds: number) => {
     if (stateRef.current !== 'idle') return;
@@ -124,5 +135,5 @@ export function useTimer(onFinished?: () => void): UseTimerReturn {
 
   useEffect(() => () => stopInterval(), [stopInterval]);
 
-  return { state, remaining, totalSeconds, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset };
+  return { state, remaining, totalSeconds, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset, repeatConfig, setRepeatConfig, currentCycle, advanceCycle };
 }
