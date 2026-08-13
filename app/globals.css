@@ -1,0 +1,38 @@
+/* Google Fonts must come first before all other rules */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ── Design system tokens ─────────────────────────────────── */
+@theme inline {
+  --color-ink:      #000000;
+  --color-body:     #363635;
+  --color-surface:  #F5F5F5;
+  --color-surface2: #EBEBEB;
+  --color-border:   #C3C3C2;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Lexend', system-ui, sans-serif;
+  background: #ffffff;
+  color: #363635;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Disable dark mode override — Cue is always white */
+@media (prefers-color-scheme: dark) {
+  body { background: #ffffff; color: #363635; }
+}
+
+/* ── Timer pulse animation ────────────────────────────────── */
+@keyframes pulse-finished {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.animate-pulse-finished {
+  animation: pulse-finished 1.4s ease-in-out infinite;
+}

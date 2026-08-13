@@ -1,0 +1,67 @@
+'use client';
+
+import { ArrowLeft } from 'lucide-react';
+import { useCallback } from 'react';
+import { useTimer } from '@/hooks/useTimer';
+import { useAlarm } from '@/hooks/useAlarm';
+import { Timer } from '@/components/Timer';
+import { TimerControls } from '@/components/TimerControls';
+import { QuickPresets } from '@/components/QuickPresets';
+
+export default function CookPage() {
+  const { startAlarm, stopAlarm, unlock } = useAlarm();
+
+  const onFinished = useCallback(() => { startAlarm(); }, [startAlarm]);
+
+  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, start, pause, resume, reset } = useTimer(onFinished);
+
+  const handleStart    = () => { unlock(); start(); };
+  const handleReset    = () => { stopAlarm(); reset(); };
+  const handleNewTimer = () => { stopAlarm(); reset(); };
+  const handleStop     = () => { stopAlarm(); };
+
+  return (
+    <main className="flex-1 flex flex-col px-6 md:px-8 py-8 md:py-12">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
+
+        {/* Back */}
+        <nav>
+          <button onClick={() => window.history.back()} className="inline-flex items-center gap-1.5 text-[13px] text-[#C3C3C2] hover:text-[#363635] transition-colors bg-transparent border-none p-0 cursor-pointer">
+            <ArrowLeft size={14} strokeWidth={1.5} aria-hidden="true" />
+            <span>Timers</span>
+          </button>
+        </nav>
+
+        <p className="text-[14px] text-[#C3C3C2] font-light">
+          Set a timer and we&apos;ll let you know when it&apos;s ready.
+        </p>
+
+        {/* Two-column layout */}
+        <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-16">
+          {/* Timer */}
+          <div className="flex flex-col gap-8 flex-1 min-w-0">
+            <Timer remaining={remaining} state={state} />
+            <TimerControls
+              state={state}
+              inputMinutes={inputMinutes}
+              inputSeconds={inputSeconds}
+              onMinutesChange={setInputMinutes}
+              onSecondsChange={setInputSeconds}
+              onStart={handleStart}
+              onPause={pause}
+              onResume={resume}
+              onReset={handleReset}
+              onStopAlarm={handleStop}
+              onNewTimer={handleNewTimer}
+            />
+          </div>
+          {/* Presets */}
+          <div className="flex-shrink-0 md:w-[240px] w-full">
+            <QuickPresets timerState={state} onApplyPreset={applyDuration} />
+          </div>
+        </div>
+
+      </div>
+    </main>
+  );
+}
