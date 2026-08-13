@@ -93,7 +93,7 @@ export function TimerControls({ state, inputMinutes, inputSeconds, onMinutesChan
               Stop Alarm
             </button>
             <button onClick={onNewTimer} className="h-[42px] px-[22px] rounded-[4px] bg-transparent text-[#363635] border border-[#C3C3C2] text-[14px] font-medium hover:bg-[#F5F5F5] hover:text-black transition-colors">
-              New Timer
+              Start Again
             </button>
           </>
         )}

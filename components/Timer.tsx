@@ -9,7 +9,7 @@ export function Timer({ remaining, state }: { remaining: number; state: TimerSta
       <div
         className={`font-light tracking-[-0.04em] leading-none tabular-nums transition-opacity duration-200
           ${state === 'paused'   ? 'opacity-45' : ''}
-          ${state === 'finished' ? 'animate-pulse' : ''}
+          ${state === 'finished' ? 'animate-pulse-finished' : ''}
         `}
         style={{ fontSize: 'clamp(72px, 18vw, 112px)' }}
         aria-live="polite"

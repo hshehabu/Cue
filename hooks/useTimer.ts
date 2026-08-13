@@ -19,6 +19,7 @@ export interface UseTimerReturn {
   setInputMinutes: (v: number) => void;
   setInputSeconds: (v: number) => void;
   applyDuration: (minutes: number, seconds: number) => void;
+  addTime: (minutes: number) => void;
   start: () => void;
   pause: () => void;
   resume: () => void;
@@ -107,7 +108,21 @@ export function useTimer(onFinished?: () => void): UseTimerReturn {
     setRemaining(total);
   }, []);
 
+  const addTime = useCallback((minutes: number) => {
+    const secondsToAdd = minutes * 60;
+    if (stateRef.current === 'idle') {
+      const newMins = Math.min(99, inputMinutes + minutes);
+      setInputMinutes(newMins);
+      const total = newMins * 60 + inputSeconds;
+      setTotalSeconds(total);
+      setRemaining(total);
+    } else {
+      remainRefAtResume.current += secondsToAdd;
+      setRemaining((prev) => prev + secondsToAdd);
+    }
+  }, [inputMinutes, inputSeconds]);
+
   useEffect(() => () => stopInterval(), [stopInterval]);
 
-  return { state, remaining, totalSeconds, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, start, pause, resume, reset };
+  return { state, remaining, totalSeconds, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset };
 }

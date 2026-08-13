@@ -82,6 +82,10 @@ export function useAlarm() {
   const unlock = useCallback(() => { getCtx(); }, [getCtx]);
 
   const playBeep = useCallback(() => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([200, 100, 200]); } catch { /* ignore */ }
+    }
+
     const ctx = getCtx();
     if (!ctx) return;
     const id = (
@@ -98,6 +102,17 @@ export function useAlarm() {
   const startAlarm = useCallback(() => {
     stopAlarm();
     playBeep();
+
+    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+      try {
+        new Notification("Time's up!", {
+          body: "Your Cue timer has finished.",
+        });
+      } catch (e) {
+        // ignore notification errors
+      }
+    }
+
     intervalRef.current = setInterval(playBeep, 1800);
   }, [playBeep, stopAlarm]);
 

@@ -6,6 +6,7 @@ import { useTimer } from '@/hooks/useTimer';
 import { useAlarm } from '@/hooks/useAlarm';
 import { Timer } from '@/components/Timer';
 import { TimerControls } from '@/components/TimerControls';
+import { QuickDurations } from '@/components/QuickDurations';
 import { QuickPresets } from '@/components/QuickPresets';
 
 export default function CookPage() {
@@ -13,7 +14,7 @@ export default function CookPage() {
 
   const onFinished = useCallback(() => { startAlarm(); }, [startAlarm]);
 
-  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, start, pause, resume, reset } = useTimer(onFinished);
+  const { state, remaining, inputMinutes, inputSeconds, setInputMinutes, setInputSeconds, applyDuration, addTime, start, pause, resume, reset } = useTimer(onFinished);
 
   const handleStart    = () => { unlock(); start(); };
   const handleReset    = () => { stopAlarm(); reset(); };
@@ -41,6 +42,7 @@ export default function CookPage() {
           {/* Timer */}
           <div className="flex flex-col gap-8 flex-1 min-w-0">
             <Timer remaining={remaining} state={state} />
+            <QuickDurations state={state} onSetDuration={applyDuration} onAddTime={addTime} />
             <TimerControls
               state={state}
               inputMinutes={inputMinutes}
