@@ -7,6 +7,7 @@ import { useAlarm } from '@/hooks/useAlarm';
 import { Timer } from '@/components/Timer';
 import { TimerControls } from '@/components/TimerControls';
 import { QuickDurations } from '@/components/QuickDurations';
+import { CustomPresets } from '@/components/CustomPresets';
 import { QuickPresets } from '@/components/QuickPresets';
 
 export default function CookPage() {
@@ -43,6 +44,7 @@ export default function CookPage() {
           <div className="flex flex-col gap-8 flex-1 min-w-0">
             <Timer remaining={remaining} state={state} />
             <QuickDurations state={state} onSetDuration={applyDuration} onAddTime={addTime} />
+            <CustomPresets state={state} currentMinutes={inputMinutes} currentSeconds={inputSeconds} onApplyPreset={applyDuration} />
             <TimerControls
               state={state}
               inputMinutes={inputMinutes}

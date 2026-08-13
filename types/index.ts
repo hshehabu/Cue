@@ -28,3 +28,11 @@ export interface AlarmSound {
 }
 
 export type TimerState = 'idle' | 'running' | 'paused' | 'finished';
+
+export interface CustomPreset {
+  id: string;
+  name: string;
+  duration: number; // total seconds
+  icon?: string;
+  createdAt: number;
+}
